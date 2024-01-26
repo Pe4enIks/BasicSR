@@ -278,11 +278,8 @@ def train_pipeline_hf(root_path: str, opt_in_root: bool = True) -> None:
     opt, args = parse_options(root_path, is_train=True, options_in_root=opt_in_root)
     opt["root_path"] = root_path
 
-    print(opt)
-    return
-
     torch.backends.cudnn.benchmark = True
-    # torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.deterministic = True
 
     # load resume states if necessary
     resume_state = load_resume_state(opt)
