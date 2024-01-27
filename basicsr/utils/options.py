@@ -167,8 +167,10 @@ def parse_options(root_path, is_train=True, options_in_root=False):
     if opt["num_gpu"] == "auto":
         opt["num_gpu"] = torch.cuda.device_count()
 
+    datasets = opt["datasets"][opt["datasets"]["type"]]
+
     # datasets
-    for phase, dataset in opt["datasets"].items():
+    for phase, dataset in datasets.items():
         # for multiple datasets, e.g., val_1, val_2; test_1, test_2
         phase = phase.split("_")[0]
         dataset["phase"] = phase
