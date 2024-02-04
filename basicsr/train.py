@@ -44,11 +44,16 @@ def init_tb_loggers(opt):
     return tb_logger
 
 
-def create_train_val_dataloader(opt, logger):
+def create_train_val_dataloader(opt, logger, dataset_type, root=None):
     # create train and val dataloaders
     train_loader, val_loaders = None, []
-    for phase, dataset_opt in opt["datasets"].items():
+    opt_datasets = opt["datasets"][dataset_type]
+    for phase, dataset_opt in opt_datasets.items():
         if phase == "train":
+            if root:
+                dataset_opt["dataroot_gt"] = str(root / dataset_opt["dataroot_gt"])
+                dataset_opt["dataroot_lq"] = str(root / dataset_opt["dataroot_lq"])
+
             dataset_enlarge_ratio = dataset_opt.get("dataset_enlarge_ratio", 1)
             train_set = build_dataset(dataset_opt)
             train_sampler = EnlargedSampler(
@@ -80,6 +85,10 @@ def create_train_val_dataloader(opt, logger):
                 f"\n\tTotal epochs: {total_epochs}; iters: {total_iters}."
             )
         elif phase.split("_")[0] == "val":
+            if root:
+                dataset_opt["dataroot_gt"] = str(root / dataset_opt["dataroot_gt"])
+                dataset_opt["dataroot_lq"] = str(root / dataset_opt["dataroot_lq"])
+
             val_set = build_dataset(dataset_opt)
             val_loader = build_dataloader(
                 val_set,
