@@ -34,9 +34,10 @@ def build_model(opt, root=None):
         opt["path"]["pretrain_network_g"] = str(
             root / opt["path"]["pretrain_network_g"]
         )
-        opt["path"]["pretrain_network_d"] = str(
-            root / opt["path"]["pretrain_network_d"]
-        )
+        if "pretrain_network_d" in opt["path"]:
+            opt["path"]["pretrain_network_d"] = str(
+                root / opt["path"]["pretrain_network_d"]
+            )
     model = MODEL_REGISTRY.get(opt["model_type"])(opt)
     logger = get_root_logger()
     logger.info(f"Model [{model.__class__.__name__}] is created.")
